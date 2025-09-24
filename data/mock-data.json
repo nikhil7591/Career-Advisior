@@ -1,0 +1,159 @@
+{
+  "users": [
+    {
+      "id": "student1",
+      "name": "Priya Sharma",
+      "type": "student",
+      "class": "12th",
+      "stream": "Science",
+      "location": "Delhi",
+      "interests": ["Technology", "Mathematics", "Innovation"],
+      "parentId": "parent1"
+    },
+    {
+      "id": "student2",
+      "name": "Arjun Patel",
+      "type": "student",
+      "class": "12th",
+      "stream": "Commerce",
+      "location": "Mumbai",
+      "interests": ["Business", "Finance", "Leadership"],
+      "parentId": "parent2"
+    },
+    {
+      "id": "parent1",
+      "name": "Rajesh Sharma",
+      "type": "parent",
+      "childId": "student1",
+      "occupation": "Engineer"
+    },
+    {
+      "id": "parent2",
+      "name": "Meera Patel",
+      "type": "parent",
+      "childId": "student2",
+      "occupation": "Teacher"
+    }
+  ],
+  "colleges": [
+    {
+      "id": "du1",
+      "name": "Delhi University - St. Stephen's College",
+      "location": "Delhi",
+      "coordinates": [28.6692, 77.2265],
+      "courses": ["B.A. Economics", "B.Sc. Physics", "B.A. English"],
+      "fees": "₹15,000/year",
+      "cutoff": "98.5%",
+      "placement": "95%",
+      "image": "/placeholder.svg?height=200&width=300"
+    },
+    {
+      "id": "iit1",
+      "name": "IIT Delhi",
+      "location": "Delhi",
+      "coordinates": [28.5449, 77.1928],
+      "courses": ["B.Tech Computer Science", "B.Tech Mechanical", "B.Tech Electrical"],
+      "fees": "₹2,50,000/year",
+      "cutoff": "JEE Advanced Rank < 500",
+      "placement": "100%",
+      "image": "/placeholder.svg?height=200&width=300"
+    },
+    {
+      "id": "jnu1",
+      "name": "Jawaharlal Nehru University",
+      "location": "Delhi",
+      "coordinates": [28.5383, 77.1641],
+      "courses": ["B.A. International Relations", "B.Sc. Life Sciences", "B.A. Languages"],
+      "fees": "₹5,000/year",
+      "cutoff": "85%",
+      "placement": "80%",
+      "image": "/placeholder.svg?height=200&width=300"
+    }
+  ],
+  "courses": [
+    {
+      "id": "btech_cs",
+      "name": "B.Tech Computer Science",
+      "duration": "4 years",
+      "careers": [
+        {
+          "title": "Software Engineer",
+          "salary": "₹8-25 LPA",
+          "demand": "Very High",
+          "growth": "15% annually"
+        },
+        {
+          "title": "Data Scientist",
+          "salary": "₹12-40 LPA",
+          "demand": "High",
+          "growth": "22% annually"
+        }
+      ]
+    },
+    {
+      "id": "bcom",
+      "name": "B.Com",
+      "duration": "3 years",
+      "careers": [
+        {
+          "title": "Chartered Accountant",
+          "salary": "₹6-20 LPA",
+          "demand": "High",
+          "growth": "8% annually"
+        },
+        {
+          "title": "Financial Analyst",
+          "salary": "₹5-15 LPA",
+          "demand": "Medium",
+          "growth": "10% annually"
+        }
+      ]
+    }
+  ],
+  "quizQuestions": [
+    {
+      "id": 1,
+      "question": "Which subject do you find most engaging?",
+      "options": [
+        { "text": "Mathematics & Physics", "category": "technical", "weight": 3 },
+        { "text": "Literature & History", "category": "humanities", "weight": 3 },
+        { "text": "Business Studies & Economics", "category": "commerce", "weight": 3 },
+        { "text": "Biology & Chemistry", "category": "medical", "weight": 3 }
+      ]
+    },
+    {
+      "id": 2,
+      "question": "What type of work environment appeals to you most?",
+      "options": [
+        { "text": "Tech companies & startups", "category": "technical", "weight": 2 },
+        { "text": "Government offices & public service", "category": "administrative", "weight": 2 },
+        { "text": "Hospitals & research labs", "category": "medical", "weight": 2 },
+        { "text": "Creative studios & media houses", "category": "creative", "weight": 2 }
+      ]
+    },
+    {
+      "id": 3,
+      "question": "Which activity would you choose for a weekend?",
+      "options": [
+        { "text": "Building a mobile app", "category": "technical", "weight": 2 },
+        { "text": "Reading about historical events", "category": "humanities", "weight": 2 },
+        { "text": "Analyzing stock market trends", "category": "commerce", "weight": 2 },
+        { "text": "Volunteering at a health camp", "category": "medical", "weight": 2 }
+      ]
+    }
+  ],
+  "chatbotResponses": [
+    {
+      "keywords": ["course", "recommend", "suggestion"],
+      "response": "Based on your interests in {interests}, I'd recommend considering {courses}. These align well with current job market trends and offer excellent career prospects."
+    },
+    {
+      "keywords": ["college", "admission", "apply"],
+      "response": "For college admissions, you'll need to check specific eligibility criteria. Most government colleges require entrance exams. Would you like me to show you colleges near your location?"
+    },
+    {
+      "keywords": ["fees", "cost", "expensive"],
+      "response": "Government colleges are significantly more affordable! Average fees range from ₹5,000-50,000 per year compared to ₹2-10 lakhs in private colleges. Plus, many scholarships are available."
+    }
+  ]
+}
