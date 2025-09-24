@@ -2,16 +2,33 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { GraduationCap, Menu, X } from "lucide-react"
+import { GraduationCap, Menu, X, Sun, Moon, Monitor } from "lucide-react"
 import Link from "next/link"
 import { NotificationBell } from "@/components/notifications/notification-bell"
 import { useUser } from "@/contexts/user-context"
+import { useTheme } from "next-themes"
 import { usePathname } from "next/navigation"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { user } = useUser()
+  const { theme, setTheme } = useTheme()
   const pathname = usePathname()
+
+  const getThemeIcon = () => {
+    if (theme === 'dark') {
+      return <Moon className="h-4 w-4" />
+    }
+    return <Sun className="h-4 w-4" />
+  }
+
+  const toggleTheme = () => {
+    if (theme === 'dark') {
+      setTheme('light')
+    } else {
+      setTheme('dark')
+    }
+  }
 
   const isProtectedRoute = pathname?.startsWith("/dashboard") ||
     pathname?.startsWith("/parent-portal") ||
@@ -42,6 +59,17 @@ export function Header() {
         </nav>
 
         <div className="hidden md:flex items-center space-x-4">
+          {/* Theme Toggle Button */}
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={toggleTheme}
+            className="hover:bg-primary/10 p-2"
+            title={`Current theme: ${theme === 'dark' ? 'dark' : 'light'}. Click to toggle theme.`}
+          >
+            {getThemeIcon()}
+          </Button>
+          
           {user && isProtectedRoute ? (
             <>
               <NotificationBell />
@@ -85,6 +113,19 @@ export function Header() {
               AI Counselor
             </Link>
             <div className="flex flex-col space-y-2 pt-4 border-t">
+              {/* Mobile Theme Toggle */}
+              <div className="flex justify-center pb-2">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={toggleTheme}
+                  className="hover:bg-primary/10 flex items-center gap-2"
+                >
+                  {getThemeIcon()}
+                  <span className="text-sm capitalize">{theme === 'dark' ? 'dark' : 'light'}</span>
+                </Button>
+              </div>
+              
               {user && isProtectedRoute ? (
                 <>
                   <div className="flex justify-center pb-2">
