@@ -30,10 +30,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const router = useRouter()
 
   // Load user from localStorage on mount
   useEffect(() => {
+    setMounted(true)
     // Ensure we're on the client side
     if (typeof window !== 'undefined') {
       const userData = localStorage.getItem("currentUser")
@@ -48,16 +50,16 @@ export function UserProvider({ children }: { children: ReactNode }) {
       }
     }
     // Small delay to ensure proper hydration
-    const timer = setTimeout(() => setLoading(false), 50)
+    const timer = setTimeout(() => setLoading(false), 100)
     return () => clearTimeout(timer)
   }, [])
 
   // Save user to localStorage whenever user changes
   useEffect(() => {
-    if (typeof window !== 'undefined' && user) {
+    if (mounted && typeof window !== 'undefined' && user) {
       localStorage.setItem("currentUser", JSON.stringify(user))
     }
-  }, [user])
+  }, [user, mounted])
 
 
   const updateUser = (updates: Partial<User>) => {
@@ -83,6 +85,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }
 
   const logout = () => {
+    if (!mounted) return
+    
     setIsLoggingOut(true)
     if (typeof window !== 'undefined') {
       localStorage.removeItem("currentUser")
@@ -102,6 +106,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
         user,
         updateUser,
         login: (newUser: User) => {
+          if (!mounted) return
+          
           // Immediately update localStorage first
           if (typeof window !== 'undefined') {
             localStorage.setItem("currentUser", JSON.stringify(newUser))

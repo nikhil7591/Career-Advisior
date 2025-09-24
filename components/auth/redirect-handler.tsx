@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useUser } from "@/contexts/user-context"
 
@@ -10,10 +10,15 @@ interface RedirectHandlerProps {
 
 export function RedirectHandler({ children }: RedirectHandlerProps) {
   const { user, loading } = useUser()
+  const [mounted, setMounted] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
-    if (loading) return
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted || loading) return
 
     // Only redirect if we're on auth page and user is logged in
     // Don't interfere with other pages (like homepage after logout)
@@ -24,7 +29,7 @@ export function RedirectHandler({ children }: RedirectHandlerProps) {
         router.replace("/parent-portal")
       }
     }
-  }, [user, loading, router])
+  }, [mounted, user, loading, router])
 
   return <>{children}</>
 }

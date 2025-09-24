@@ -9,6 +9,7 @@ import { UserProvider } from "@/contexts/user-context"
 import { NotificationProvider } from "@/contexts/notification-context"
 import { NotificationManager } from "@/components/notifications/notification-manager"
 import { RedirectHandler } from "@/components/auth/redirect-handler"
+import { ClientOnly } from "@/components/client-only"
 import { Toaster } from "@/components/ui/toaster"
 import { Suspense } from "react"
 
@@ -24,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -51,19 +52,21 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
+      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
         <Suspense fallback={null}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <UserProvider>
-              <NotificationProvider>
-                <RedirectHandler>
-                  <NotificationManager />
-                  {children}
-                  <Toaster />
-                </RedirectHandler>
-              </NotificationProvider>
-            </UserProvider>
-          </ThemeProvider>
+          <ClientOnly>
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+              <UserProvider>
+                <NotificationProvider>
+                  <RedirectHandler>
+                    <NotificationManager />
+                    {children}
+                    <Toaster />
+                  </RedirectHandler>
+                </NotificationProvider>
+              </UserProvider>
+            </ThemeProvider>
+          </ClientOnly>
         </Suspense>
         <Analytics />
       </body>

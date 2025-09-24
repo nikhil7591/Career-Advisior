@@ -2,15 +2,20 @@
 
 import { useNotifications } from "@/contexts/notification-context"
 import { useUser } from "@/contexts/user-context"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 // This component handles automatic notifications based on user actions
 export function NotificationManager() {
   const { addNotification } = useNotifications()
   const { user } = useUser()
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    if (!user || typeof window === 'undefined') return
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted || !user || typeof window === 'undefined') return
 
     // Add welcome notification for new users
     const hasWelcomeNotification = localStorage.getItem(`welcome_${user.id}`)

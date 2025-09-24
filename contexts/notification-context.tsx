@@ -65,9 +65,11 @@ const initialNotifications: Notification[] = [
 
 export function NotificationProvider({ children }: { children: ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>([])
+  const [mounted, setMounted] = useState(false)
 
   // Load notifications from localStorage on mount
   useEffect(() => {
+    setMounted(true)
     // Ensure we're on the client side
     if (typeof window !== 'undefined') {
       const savedNotifications = localStorage.getItem("notifications")
@@ -94,10 +96,10 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
 
   // Save notifications to localStorage whenever they change
   useEffect(() => {
-    if (typeof window !== 'undefined' && notifications.length > 0) {
+    if (mounted && typeof window !== 'undefined' && notifications.length > 0) {
       localStorage.setItem("notifications", JSON.stringify(notifications))
     }
-  }, [notifications])
+  }, [notifications, mounted])
 
   const addNotification = (notification: Omit<Notification, "id" | "timestamp">) => {
     const newNotification: Notification = {

@@ -1,18 +1,21 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { User, LogOut, Settings } from "lucide-react"
+import { User, LogOut, Settings, GraduationCap, MapPin, Palette, Sun, Moon, Monitor, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useUser } from "@/contexts/user-context"
 import { Portal } from "@/components/ui/portal"
+import { useTheme } from "next-themes"
 import Link from "next/link"
 
 export function SimpleUserDropdown() {
   const { user, logout } = useUser()
+  const { theme, setTheme } = useTheme()
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 })
+
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -83,19 +86,59 @@ export function SimpleUserDropdown() {
               </Link>
               <Link href="/career-mapping" onClick={() => setIsOpen(false)}>
                 <div className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer flex items-center gap-2">
-                  <Settings className="h-4 w-4" />
+                  <MapPin className="h-4 w-4" />
                   Career Path
                 </div>
               </Link>
               <Link href="/colleges" onClick={() => setIsOpen(false)}>
                 <div className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer flex items-center gap-2">
-                  <Settings className="h-4 w-4" />
+                  <GraduationCap className="h-4 w-4" />
                   Colleges
                 </div>
               </Link>
+              
+              {/* Appearance section */}
+              <div className="border-t pt-2 mt-2">
+                <div className="px-3 py-1 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                  Appearance
+                </div>
+                <div 
+                  className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer flex items-center gap-2"
+                  onClick={() => {
+                    setTheme('light')
+                    console.log('Setting theme to light')
+                  }}
+                >
+                  <Sun className="h-4 w-4" />
+                  Light
+                  {theme === 'light' && <div className="ml-auto w-2 h-2 bg-primary rounded-full" />}
+                </div>
+                <div 
+                  className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer flex items-center gap-2"
+                  onClick={() => {
+                    setTheme('dark')
+                    console.log('Setting theme to dark')
+                  }}
+                >
+                  <Moon className="h-4 w-4" />
+                  Dark
+                  {theme === 'dark' && <div className="ml-auto w-2 h-2 bg-primary rounded-full" />}
+                </div>
+                <div 
+                  className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer flex items-center gap-2"
+                  onClick={() => {
+                    setTheme('system')
+                    console.log('Setting theme to system')
+                  }}
+                >
+                  <Monitor className="h-4 w-4" />
+                  System
+                  {(theme === 'system' || !theme) && <div className="ml-auto w-2 h-2 bg-primary rounded-full" />}
+                </div>
+              </div>
               <Link href="/chatbot" onClick={() => setIsOpen(false)}>
                 <div className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer flex items-center gap-2">
-                  <User className="h-4 w-4" />
+                  <MessageCircle className="h-4 w-4" />
                   AI Counselor
                 </div>
               </Link>

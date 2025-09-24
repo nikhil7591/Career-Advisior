@@ -13,10 +13,15 @@ interface AuthGuardProps {
 export function AuthGuard({ children, requiredType }: AuthGuardProps) {
   const { user, loading, isLoggingOut } = useUser()
   const [isRedirecting, setIsRedirecting] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
-    if (loading || isLoggingOut) return
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted || loading || isLoggingOut) return
 
     if (!user) {
       // Don't redirect if user is logging out (let logout handle navigation)
@@ -34,9 +39,9 @@ export function AuthGuard({ children, requiredType }: AuthGuardProps) {
     }
     
     setIsRedirecting(false)
-  }, [user, loading, isLoggingOut, requiredType, router])
+  }, [mounted, user, loading, isLoggingOut, requiredType, router])
 
-  if (loading || isRedirecting || isLoggingOut) {
+  if (!mounted || loading || isRedirecting || isLoggingOut) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
