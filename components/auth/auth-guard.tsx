@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useUser } from "@/contexts/user-context"
 
@@ -11,24 +11,32 @@ interface AuthGuardProps {
 }
 
 export function AuthGuard({ children, requiredType }: AuthGuardProps) {
-  const { user, loading } = useUser()
+  const { user, loading, isLoggingOut } = useUser()
+  const [isRedirecting, setIsRedirecting] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
-    if (loading) return
+    if (loading || isLoggingOut) return
 
     if (!user) {
-      router.push("/auth")
+      // Don't redirect if user is logging out (let logout handle navigation)
+      if (!isLoggingOut) {
+        setIsRedirecting(true)
+        router.push("/auth")
+      }
       return
     }
 
     if (requiredType && user.type !== requiredType) {
+      setIsRedirecting(true)
       router.push("/auth")
       return
     }
-  }, [user, loading, requiredType, router])
+    
+    setIsRedirecting(false)
+  }, [user, loading, isLoggingOut, requiredType, router])
 
-  if (loading) {
+  if (loading || isRedirecting || isLoggingOut) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>

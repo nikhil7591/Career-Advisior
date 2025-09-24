@@ -18,11 +18,11 @@ import {
   Clock,
   CheckCircle,
 } from "lucide-react"
-import { useCurrentUser } from "@/components/auth/auth-guard"
+import { useUser } from "@/contexts/user-context"
 import { useRouter } from "next/navigation"
 
 export function StudentDashboard() {
-  const user = useCurrentUser()
+  const { user } = useUser()
   const router = useRouter()
   const [progress, setProgress] = useState(0)
 

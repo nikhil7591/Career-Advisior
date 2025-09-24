@@ -8,10 +8,10 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Users, DollarSign, Calendar, MessageCircle, BookOpen, Award, Target, Clock, CheckCircle } from "lucide-react"
-import { useCurrentUser } from "@/components/auth/auth-guard"
+import { useUser } from "@/contexts/user-context"
 
 export function ParentPortal() {
-  const user = useCurrentUser()
+  const { user } = useUser()
   const [selectedTab, setSelectedTab] = useState("overview")
 
   // Mock child data based on parent

@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button"
 import { GraduationCap, Menu, X } from "lucide-react"
 import Link from "next/link"
 import { NotificationBell } from "@/components/notifications/notification-bell"
-import { useCurrentUser } from "@/components/auth/auth-guard"
+import { useUser } from "@/contexts/user-context"
 import { usePathname } from "next/navigation"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const user = useCurrentUser()
+  const { user } = useUser()
   const pathname = usePathname()
 
   const isProtectedRoute = pathname?.startsWith("/dashboard") ||

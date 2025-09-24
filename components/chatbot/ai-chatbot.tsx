@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { MessageCircle, Send, Bot, User, Lightbulb, BookOpen } from "lucide-react"
-import { useCurrentUser } from "@/components/auth/auth-guard"
+import { useUser } from "@/contexts/user-context"
 
 interface Message {
   id: string
@@ -79,7 +79,7 @@ export function AIChatbot() {
   const [inputValue, setInputValue] = useState("")
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const user = useCurrentUser()
+  const { user } = useUser()
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })

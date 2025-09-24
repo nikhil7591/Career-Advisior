@@ -43,7 +43,7 @@ export default function AuthPage() {
   const [userType, setUserType] = useState<"student" | "parent" | null>(null)
   const [selectedUser, setSelectedUser] = useState<string>("")
   const [mounted, setMounted] = useState(false)
-  const { updateUser } = useUser()
+  const { login } = useUser()
   const router = useRouter()
 
   useEffect(() => {
@@ -64,14 +64,14 @@ export default function AuthPage() {
     if (selectedUser) {
       const user = mockUsers.find((u) => u.id === selectedUser)
       if (user) {
-        // Update user context
-        updateUser(user)
+        // Login user
+        login(user)
         
-        // Navigate to appropriate dashboard
+        // Navigate to appropriate dashboard using replace to avoid back navigation issues
         if (user.type === "student") {
-          router.push("/dashboard")
+          router.replace("/dashboard")
         } else {
-          router.push("/parent-portal")
+          router.replace("/parent-portal")
         }
       }
     }

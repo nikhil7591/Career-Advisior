@@ -18,8 +18,10 @@ export interface User {
 interface UserContextType {
   user: User | null
   updateUser: (updates: Partial<User>) => void
+  login: (user: User) => void
   logout: () => void
   loading: boolean
+  isLoggingOut: boolean
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined)
@@ -27,6 +29,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined)
 export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
   const router = useRouter()
 
   // Load user from localStorage on mount
@@ -44,7 +47,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
         }
       }
     }
-    setLoading(false)
+    // Small delay to ensure proper hydration
+    const timer = setTimeout(() => setLoading(false), 50)
+    return () => clearTimeout(timer)
   }, [])
 
   // Save user to localStorage whenever user changes
@@ -53,6 +58,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       localStorage.setItem("currentUser", JSON.stringify(user))
     }
   }, [user])
+
 
   const updateUser = (updates: Partial<User>) => {
     setUser((prevUser) => {
@@ -77,9 +83,17 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }
 
   const logout = () => {
-    localStorage.removeItem("currentUser")
+    setIsLoggingOut(true)
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem("currentUser")
+    }
     setUser(null)
-    router.push("/")
+    
+    // Navigate to homepage
+    router.replace("/")
+    
+    // Reset logout flag after navigation
+    setTimeout(() => setIsLoggingOut(false), 500)
   }
 
   return (
@@ -87,8 +101,17 @@ export function UserProvider({ children }: { children: ReactNode }) {
       value={{
         user,
         updateUser,
+        login: (newUser: User) => {
+          // Immediately update localStorage first
+          if (typeof window !== 'undefined') {
+            localStorage.setItem("currentUser", JSON.stringify(newUser))
+          }
+          // Then update state
+          setUser(newUser)
+        },
         logout,
         loading,
+        isLoggingOut,
       }}
     >
       {children}

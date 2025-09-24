@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { UserProvider } from "@/contexts/user-context"
 import { NotificationProvider } from "@/contexts/notification-context"
 import { NotificationManager } from "@/components/notifications/notification-manager"
+import { RedirectHandler } from "@/components/auth/redirect-handler"
 import { Toaster } from "@/components/ui/toaster"
 import { Suspense } from "react"
 
@@ -55,9 +56,11 @@ export default function RootLayout({
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <UserProvider>
               <NotificationProvider>
-                <NotificationManager />
-                {children}
-                <Toaster />
+                <RedirectHandler>
+                  <NotificationManager />
+                  {children}
+                  <Toaster />
+                </RedirectHandler>
               </NotificationProvider>
             </UserProvider>
           </ThemeProvider>
