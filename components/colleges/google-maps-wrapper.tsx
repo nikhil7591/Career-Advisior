@@ -5,7 +5,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { MapPin, Star, DollarSign, Users, Search, Navigation, Loader2, AlertCircle, MapIcon } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { MapPin, Star, DollarSign, Users, Search, Navigation, Loader2, AlertCircle, MapIcon, Target, Settings, RefreshCw } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
 interface College {
@@ -40,6 +42,7 @@ declare global {
   interface Window {
     google: any
     initMap: () => void
+    initGoogleMaps: () => void
     selectCollege: (collegeId: string) => void
   }
 }
@@ -70,8 +73,37 @@ export function GoogleMapsWrapper({ colleges, onCollegeSelect }: GoogleMapsWrapp
   const [showDemoMap, setShowDemoMap] = useState(false)
   const [locationPermission, setLocationPermission] = useState<"granted" | "denied" | "prompt" | "unknown">("unknown")
   const [locationError, setLocationError] = useState<string | null>(null)
+  const [nearbyColleges, setNearbyColleges] = useState<College[]>([])
+  const [radius, setRadius] = useState(10)
+  const [showNearbyMode, setShowNearbyMode] = useState(false)
+  const [manualLocation, setManualLocation] = useState("")
+  const [showLocationInput, setShowLocationInput] = useState(false)
+  const [locationSearchTerm, setLocationSearchTerm] = useState("")
 
   const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+
+  // Fetch nearby colleges from API
+  const fetchNearbyColleges = async (lat: number, lng: number, radiusKm: number) => {
+    try {
+      const response = await fetch(`/api/colleges?lat=${lat}&lng=${lng}&radius_km=${radiusKm}`)
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
+      const data = await response.json()
+      
+      if (data.success) {
+        setNearbyColleges(data.data)
+        setShowNearbyMode(true)
+      } else {
+        throw new Error(data.error || 'Failed to fetch colleges')
+      }
+    } catch (error) {
+      console.error('Error fetching nearby colleges:', error)
+      setLocationError("Failed to fetch nearby colleges. Please try again.")
+    }
+  }
 
   const getUserLocation = () => {
     setLocationLoading(true)
@@ -85,7 +117,7 @@ export function GoogleMapsWrapper({ colleges, onCollegeSelect }: GoogleMapsWrapp
     }
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
         console.log("[v0] Geolocation success:", position.coords)
         const userPos = {
           lat: position.coords.latitude,
@@ -104,6 +136,9 @@ export function GoogleMapsWrapper({ colleges, onCollegeSelect }: GoogleMapsWrapp
 
         setSortedColleges(collegesWithDistance)
         setLocationLoading(false)
+
+        // Fetch nearby colleges from API
+        await fetchNearbyColleges(userPos.lat, userPos.lng, radius)
 
         if (map) {
           map.setCenter(userPos)
@@ -131,8 +166,8 @@ export function GoogleMapsWrapper({ colleges, onCollegeSelect }: GoogleMapsWrapp
         }
 
         setUserLocation({ lat: 28.6139, lng: 77.209 })
-
         setSortedColleges(colleges)
+        setShowNearbyMode(false)
       },
       {
         enableHighAccuracy: true,
@@ -162,15 +197,110 @@ export function GoogleMapsWrapper({ colleges, onCollegeSelect }: GoogleMapsWrapp
     }
   }, [])
 
+  // Handle radius change
+  const handleRadiusChange = async (newRadius: string) => {
+    const radiusNum = parseInt(newRadius)
+    setRadius(radiusNum)
+    
+    if (userLocation && showNearbyMode) {
+      setLocationLoading(true)
+      await fetchNearbyColleges(userLocation.lat, userLocation.lng, radiusNum)
+      setLocationLoading(false)
+    }
+  }
+
+  // Handle location search from search bar
+  const handleLocationSearch = async (searchLocation: string) => {
+    if (!searchLocation.trim()) {
+      // If empty search, show original colleges
+      setFilteredColleges(sortedColleges)
+      setShowNearbyMode(false)
+      return
+    }
+
+    setLocationLoading(true)
+    setLocationError(null)
+
+    try {
+      // Mock different locations based on search term
+      let mockLocation
+      const searchLower = searchLocation.toLowerCase()
+      
+      if (searchLower.includes('delhi') || searchLower.includes('new delhi')) {
+        mockLocation = { lat: 28.6139, lng: 77.2090 }
+      } else if (searchLower.includes('mumbai') || searchLower.includes('bombay')) {
+        mockLocation = { lat: 19.0760, lng: 72.8777 }
+      } else if (searchLower.includes('bangalore') || searchLower.includes('bengaluru')) {
+        mockLocation = { lat: 12.9716, lng: 77.5946 }
+      } else if (searchLower.includes('chennai') || searchLower.includes('madras')) {
+        mockLocation = { lat: 13.0827, lng: 80.2707 }
+      } else if (searchLower.includes('kolkata') || searchLower.includes('calcutta')) {
+        mockLocation = { lat: 22.5726, lng: 88.3639 }
+      } else if (searchLower.includes('hyderabad')) {
+        mockLocation = { lat: 17.3850, lng: 78.4867 }
+      } else if (searchLower.includes('pune')) {
+        mockLocation = { lat: 18.5204, lng: 73.8567 }
+      } else if (searchLower.includes('ahmedabad')) {
+        mockLocation = { lat: 23.0225, lng: 72.5714 }
+      } else {
+        // Default to Delhi for any other search
+        mockLocation = { lat: 28.6139, lng: 77.2090 }
+      }
+
+      setUserLocation(mockLocation)
+      await fetchNearbyColleges(mockLocation.lat, mockLocation.lng, 20) // Use 20km radius for searches
+      
+      if (map) {
+        map.setCenter(mockLocation)
+        map.setZoom(10)
+      }
+      
+      setLocationLoading(false)
+    } catch (error) {
+      setLocationError("Failed to find colleges near that location. Please try again.")
+      setLocationLoading(false)
+    }
+  }
+
+  // Handle manual location input
+  const handleManualLocation = async () => {
+    if (!manualLocation.trim()) return
+
+    await handleLocationSearch(manualLocation)
+    setShowLocationInput(false)
+    setManualLocation("")
+  }
+
   useEffect(() => {
-    const filtered = sortedColleges.filter(
+    const collegeList = showNearbyMode ? nearbyColleges : sortedColleges
+    const filtered = collegeList.filter(
       (college) =>
         college.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         college.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
         college.courses.some((course) => course.toLowerCase().includes(searchTerm.toLowerCase())),
     )
     setFilteredColleges(filtered)
-  }, [searchTerm, sortedColleges])
+  }, [searchTerm, sortedColleges, nearbyColleges, showNearbyMode])
+
+  // Handle search input with location detection
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value)
+    
+    // Check if search looks like a location (city name, etc.)
+    const locationKeywords = ['delhi', 'mumbai', 'bangalore', 'chennai', 'kolkata', 'hyderabad', 'pune', 'ahmedabad', 'city', 'near']
+    const isLocationSearch = locationKeywords.some(keyword => 
+      value.toLowerCase().includes(keyword)
+    )
+    
+    if (isLocationSearch && value.length > 3) {
+      // Debounce location search
+      setTimeout(() => {
+        if (searchTerm === value) { // Only search if user hasn't changed input
+          handleLocationSearch(value)
+        }
+      }, 1000)
+    }
+  }
 
   const isValidApiKey = (key: string | undefined): boolean => {
     if (!key) return false
@@ -418,7 +548,7 @@ export function GoogleMapsWrapper({ colleges, onCollegeSelect }: GoogleMapsWrapp
           <CardDescription className="animate-slide-in-left animation-delay-200">
             {showDemoMap
               ? "Demo map showing colleges near you. Enable location for distance-based sorting."
-              : "Explore government and private colleges across India. Click on markers to see detailed information."}
+              : "Explore government and private colleges across India. Click on markers to see detailed information. Search by location to find nearby colleges."}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -433,6 +563,15 @@ export function GoogleMapsWrapper({ colleges, onCollegeSelect }: GoogleMapsWrapp
                     the page.
                   </span>
                 )}
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={getUserLocation} 
+                  className="ml-2"
+                >
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Retry
+                </Button>
               </AlertDescription>
             </Alert>
           )}
@@ -445,7 +584,12 @@ export function GoogleMapsWrapper({ colleges, onCollegeSelect }: GoogleMapsWrapp
                   <Input
                     placeholder="Search nearby colleges"
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => handleSearchChange(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        handleLocationSearch(searchTerm)
+                      }
+                    }}
                     className="pl-10 border-2 focus:border-primary transition-all duration-300"
                   />
                 </div>

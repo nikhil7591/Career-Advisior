@@ -1,7 +1,7 @@
 import { Header } from "@/components/layout/header"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { GraduationCap, Users, MapPin, MessageCircle, TrendingUp, Award } from "lucide-react"
+import { GraduationCap, Users, MapPin, MessageCircle, TrendingUp, Award, Calendar, BookOpen } from "lucide-react"
 import Link from "next/link"
 
 export default function HomePage() {
@@ -145,8 +145,36 @@ export default function HomePage() {
               </Card>
             </Link>
 
-            <Link href="/dashboard">
+            <Link href="/timeline">
               <Card className="p-6 hover:shadow-xl transition-all cursor-pointer glass lift tilt animate-fade-up" style={{animationDelay:"360ms"}}>
+                <CardContent className="p-0">
+                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                    <Calendar className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">Timeline Tracker</h3>
+                  <p className="text-muted-foreground">
+                    Never miss admission dates, exam schedules, and scholarship deadlines
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href="/study-materials">
+              <Card className="p-6 hover:shadow-xl transition-all cursor-pointer glass lift tilt animate-fade-up" style={{animationDelay:"420ms"}}>
+                <CardContent className="p-0">
+                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                    <BookOpen className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">Study Materials</h3>
+                  <p className="text-muted-foreground">
+                    Access free e-books, study guides, and resources for exam preparation
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href="/dashboard">
+              <Card className="p-6 hover:shadow-xl transition-all cursor-pointer glass lift tilt animate-fade-up" style={{animationDelay:"480ms"}}>
                 <CardContent className="p-0">
                   <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                     <GraduationCap className="h-6 w-6 text-primary" />

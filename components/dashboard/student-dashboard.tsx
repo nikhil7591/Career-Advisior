@@ -17,9 +17,63 @@ import {
   Users,
   Clock,
   CheckCircle,
+  Download,
+  Eye,
+  Star,
+  FileText,
+  Video,
+  Headphones,
 } from "lucide-react"
 import { useUser } from "@/contexts/user-context"
 import { useRouter } from "next/navigation"
+
+// Dummy study materials data
+const studyMaterials = [
+  {
+    id: "1",
+    title: "JEE Main Mathematics Guide",
+    type: "ebook" as const,
+    subject: "Mathematics",
+    downloads: 1240,
+    rating: 4.8,
+    size: "12.5 MB",
+    icon: FileText,
+    description: "Complete mathematics preparation guide for JEE Main"
+  },
+  {
+    id: "2",
+    title: "Physics Concepts Video Series",
+    type: "video" as const,
+    subject: "Physics",
+    downloads: 890,
+    rating: 4.6,
+    duration: "8 hours",
+    icon: Video,
+    description: "Interactive video lessons for Class 12 Physics"
+  },
+  {
+    id: "3",
+    title: "English Grammar Audio Course",
+    type: "audio" as const,
+    subject: "English",
+    downloads: 650,
+    rating: 4.7,
+    duration: "6 hours",
+    icon: Headphones,
+    description: "CUET English preparation audio lessons"
+  },
+  {
+    id: "4",
+    title: "Commerce Career Guide",
+    type: "ebook" as const,
+    subject: "Career Guidance",
+    downloads: 1100,
+    rating: 4.9,
+    size: "8.2 MB",
+    icon: FileText,
+    description: "Complete career options for commerce students"
+  }
+]
 
 export function StudentDashboard() {
   const { user } = useUser()
@@ -46,6 +100,10 @@ export function StudentDashboard() {
 
   const handleChatbot = () => {
     router.push("/chatbot")
+  }
+
+  const handleStudyMaterials = () => {
+    router.push("/study-materials")
   }
 
   return (
@@ -120,7 +178,7 @@ export function StudentDashboard() {
                 <CardTitle>Quick Actions</CardTitle>
                 <CardDescription>Start with these essential steps for your career journey</CardDescription>
               </CardHeader>
-              <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <Button className="h-20 flex-col gap-2" onClick={handleStartQuiz}>
                   <Brain className="h-6 w-6" />
                   Take Aptitude Quiz
@@ -135,6 +193,11 @@ export function StudentDashboard() {
                   Explore Colleges
                 </Button>
 
+                <Button variant="outline" className="h-20 flex-col gap-2 bg-transparent" onClick={handleStudyMaterials}>
+                  <BookOpen className="h-6 w-6" />
+                  Study Materials
+                </Button>
+
                 <Button variant="outline" className="h-20 flex-col gap-2 bg-transparent" onClick={handleCareerMapping}>
                   <TrendingUp className="h-6 w-6" />
                   Career Mapping
@@ -143,6 +206,11 @@ export function StudentDashboard() {
                 <Button variant="outline" className="h-20 flex-col gap-2 bg-transparent" onClick={handleChatbot}>
                   <MessageCircle className="h-6 w-6" />
                   AI Counselor
+                </Button>
+
+                <Button variant="outline" className="h-20 flex-col gap-2 bg-transparent" onClick={() => router.push("/timeline")}>
+                  <Calendar className="h-6 w-6" />
+                  Timeline Tracker
                 </Button>
               </CardContent>
             </Card>
@@ -185,6 +253,83 @@ export function StudentDashboard() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Study Materials Section */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <BookOpen className="h-5 w-5" />
+                      Study Materials
+                    </CardTitle>
+                    <CardDescription>
+                      Free resources to boost your preparation
+                    </CardDescription>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={handleStudyMaterials}>
+                    View All
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {studyMaterials.map((material) => {
+                    const Icon = material.icon
+                    return (
+                      <div key={material.id} className="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                        <div className="flex items-start gap-3">
+                          <div className="p-2 bg-primary/10 rounded-lg">
+                            <Icon className="h-4 w-4 text-primary" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-medium text-sm line-clamp-1">{material.title}</h4>
+                            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                              {material.description}
+                            </p>
+                            <div className="flex items-center gap-3 mt-2">
+                              <div className="flex items-center gap-1">
+                                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                                <span className="text-xs">{material.rating}</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <Download className="h-3 w-3 text-muted-foreground" />
+                                <span className="text-xs">{material.downloads}</span>
+                              </div>
+                              <Badge variant="outline" className="text-xs">
+                                {material.subject}
+                              </Badge>
+                            </div>
+                            <div className="flex items-center justify-between mt-3">
+                              <span className="text-xs text-muted-foreground">
+                                {material.size || material.duration}
+                              </span>
+                              <Button size="sm" variant="outline" className="h-6 text-xs px-2">
+                                <Download className="h-3 w-3 mr-1" />
+                                Download
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+                <div className="mt-4 p-3 bg-muted/50 rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-sm font-medium">Need more resources?</div>
+                      <div className="text-xs text-muted-foreground">
+                        Explore our complete library of study materials
+                      </div>
+                    </div>
+                    <Button size="sm" onClick={handleStudyMaterials}>
+                      Browse All
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Sidebar */}
@@ -205,10 +350,18 @@ export function StudentDashboard() {
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <BookOpen className="h-4 w-4 text-primary" />
+                    <MapPin className="h-4 w-4 text-primary" />
                     <span className="text-sm">Colleges Explored</span>
                   </div>
                   <span className="text-sm font-medium">0</span>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <BookOpen className="h-4 w-4 text-primary" />
+                    <span className="text-sm">Materials Downloaded</span>
+                  </div>
+                  <span className="text-sm font-medium">3</span>
                 </div>
 
                 <div className="flex items-center justify-between">
