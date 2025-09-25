@@ -275,9 +275,15 @@ export function GoogleMapsWrapper({ colleges, onCollegeSelect }: GoogleMapsWrapp
     const collegeList = showNearbyMode ? nearbyColleges : sortedColleges
     const filtered = collegeList.filter(
       (college) =>
+<<<<<<< HEAD
         college.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         college.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         college.courses?.some((course) => course?.toLowerCase().includes(searchTerm.toLowerCase())),
+=======
+        college.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        college.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        college.courses.some((course) => course.toLowerCase().includes(searchTerm.toLowerCase())),
+>>>>>>> fa3e6a60816276096d6f8d1e20a0f09a03a86707
     )
     setFilteredColleges(filtered)
   }, [searchTerm, sortedColleges, nearbyColleges, showNearbyMode])
@@ -427,14 +433,22 @@ export function GoogleMapsWrapper({ colleges, onCollegeSelect }: GoogleMapsWrapp
                 </div>
               </div>
               
+<<<<<<< HEAD
               <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #1f2937;">${college.name || 'Unnamed College'}</h3>
+=======
+              <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #1f2937;">${college.name}</h3>
+>>>>>>> fa3e6a60816276096d6f8d1e20a0f09a03a86707
               
               <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 8px; color: #6b7280; font-size: 14px;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                   <circle cx="12" cy="10" r="3"></circle>
                 </svg>
+<<<<<<< HEAD
                 ${college.location || 'Location not specified'}${distanceText}
+=======
+                ${college.location}${distanceText}
+>>>>>>> fa3e6a60816276096d6f8d1e20a0f09a03a86707
               </div>
               
               <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 12px;">
@@ -464,12 +478,17 @@ export function GoogleMapsWrapper({ colleges, onCollegeSelect }: GoogleMapsWrapp
               </div>
               
               <p style="margin: 0 0 12px 0; font-size: 13px; color: #6b7280; line-height: 1.4;">
+<<<<<<< HEAD
                 ${(college.description || 'No description available').substring(0, 100)}...
+=======
+                ${college.description.substring(0, 100)}...
+>>>>>>> fa3e6a60816276096d6f8d1e20a0f09a03a86707
               </p>
               
               <div style="margin-bottom: 12px;">
                 <div style="font-size: 12px; font-weight: 500; margin-bottom: 4px; color: #374151;">Popular Courses:</div>
                 <div style="display: flex; flex-wrap: gap: 4px;">
+<<<<<<< HEAD
                   ${(college.courses || [])
                     .slice(0, 2)
                     .map(
@@ -478,6 +497,16 @@ export function GoogleMapsWrapper({ colleges, onCollegeSelect }: GoogleMapsWrapp
                     )
                     .join("")}
                   ${(college.courses || []).length > 2 ? `<span style="background: #f3f4f6; color: #374151; padding: 2px 6px; border-radius: 4px; font-size: 11px;">+${(college.courses || []).length - 2} more</span>` : ""}
+=======
+                  ${college.courses
+                    .slice(0, 2)
+                    .map(
+                      (course) =>
+                        `<span style="background: #f3f4f6; color: #374151; padding: 2px 6px; border-radius: 4px; font-size: 11px;">${course}</span>`,
+                    )
+                    .join("")}
+                  ${college.courses.length > 2 ? `<span style="background: #f3f4f6; color: #374151; padding: 2px 6px; border-radius: 4px; font-size: 11px;">+${college.courses.length - 2} more</span>` : ""}
+>>>>>>> fa3e6a60816276096d6f8d1e20a0f09a03a86707
                 </div>
               </div>
               
@@ -659,7 +688,11 @@ export function GoogleMapsWrapper({ colleges, onCollegeSelect }: GoogleMapsWrapp
                           <div className="flex items-center gap-1 mb-2">
                             <MapPin className="h-3 w-3 text-muted-foreground animate-bounce-gentle" />
                             <span className="text-xs text-muted-foreground">
+<<<<<<< HEAD
                               {college.location || 'Location not specified'}
+=======
+                              {college.location}
+>>>>>>> fa3e6a60816276096d6f8d1e20a0f09a03a86707
                               {college.distance && locationPermission === "granted" && (
                                 <span className="ml-1 text-blue-600 font-medium animate-pulse">
                                   • {college.distance.toFixed(1)} km away

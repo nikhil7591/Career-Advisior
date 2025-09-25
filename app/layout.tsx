@@ -70,9 +70,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+<<<<<<< HEAD
 }: {
   children: React.ReactNode
 }) {
+=======
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+>>>>>>> fa3e6a60816276096d6f8d1e20a0f09a03a86707
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -82,8 +88,83 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Career Path" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-TileColor" content="#2563eb" />
+<<<<<<< HEAD
         <link rel="apple-touch-icon" href="/icon-192x192.png" />
         <link rel="mask-icon" href="/icon-192x192.png" color="#2563eb" />
+=======
+        <meta name="msapplication-tap-highlight" content="no" />
+        
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/icon-192x192.png" />
+        <link rel="mask-icon" href="/icon-192x192.png" color="#2563eb" />
+        
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Suppress ResizeObserver loop error - this is a harmless browser issue
+              window.addEventListener('error', function(e) {
+                if (e.message === 'ResizeObserver loop completed with undelivered notifications.' || 
+                    e.message === 'ResizeObserver loop limit exceeded') {
+                  e.stopImmediatePropagation();
+                  return false;
+                }
+              });
+              
+              // Also handle unhandled promise rejections for ResizeObserver
+              window.addEventListener('unhandledrejection', function(e) {
+                if (e.reason && e.reason.message && 
+                    (e.reason.message.includes('ResizeObserver') || 
+                     e.reason.message.includes('loop completed'))) {
+                  e.preventDefault();
+                  return false;
+                }
+              });
+
+              // Register Service Worker for PWA
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                      console.log('SW registered: ', registration);
+                    })
+                    .catch(function(registrationError) {
+                      console.log('SW registration failed: ', registrationError);
+                    });
+                });
+              }
+
+              // Handle install prompt
+              let deferredPrompt;
+              window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                // Show install button or banner
+                const installBanner = document.createElement('div');
+                installBanner.innerHTML = \`
+                  <div style="position: fixed; bottom: 20px; left: 20px; right: 20px; background: #2563eb; color: white; padding: 16px; border-radius: 8px; z-index: 1000; display: flex; justify-content: space-between; align-items: center;">
+                    <span>Install Career Path for offline access!</span>
+                    <button onclick="installApp()" style="background: white; color: #2563eb; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Install</button>
+                    <button onclick="this.parentElement.remove()" style="background: transparent; color: white; border: 1px solid white; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-left: 8px;">×</button>
+                  </div>
+                \`;
+                document.body.appendChild(installBanner);
+              });
+
+              window.installApp = function() {
+                if (deferredPrompt) {
+                  deferredPrompt.prompt();
+                  deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                      console.log('User accepted the install prompt');
+                    }
+                    deferredPrompt = null;
+                  });
+                }
+              };
+            `,
+          }}
+        />
+>>>>>>> fa3e6a60816276096d6f8d1e20a0f09a03a86707
       </head>
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
         <Suspense fallback={null}>
