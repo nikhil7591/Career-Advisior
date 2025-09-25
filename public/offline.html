@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - Career Path</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 500px;
+        }
+        
+        .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        
+        .features {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .features h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .features ul {
+            list-style: none;
+            text-align: left;
+        }
+        
+        .features li {
+            padding: 0.5rem 0;
+            opacity: 0.9;
+        }
+        
+        .features li:before {
+            content: "✓ ";
+            color: #4ade80;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        
+        .retry-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .retry-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .offline-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        @media (max-width: 640px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .icon {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-indicator">
+        🔴 Offline Mode
+    </div>
+    
+    <div class="container">
+        <div class="icon">📚</div>
+        <h1>You're Currently Offline</h1>
+        <p>Don't worry! Career Path works offline too. You can still access your saved data and continue your career exploration.</p>
+        
+        <div class="features">
+            <h3>Available Offline Features:</h3>
+            <ul>
+                <li>View previously loaded college information</li>
+                <li>Access your quiz results and recommendations</li>
+                <li>Browse cached career mapping data</li>
+                <li>Review your timeline and saved reminders</li>
+                <li>Use the chatbot with cached responses</li>
+            </ul>
+        </div>
+        
+        <p>Your progress is automatically saved and will sync when you're back online.</p>
+        
+        <button class="retry-btn" onclick="window.location.reload()">
+            🔄 Try Again
+        </button>
+    </div>
+    
+    <script>
+        // Check for online status
+        function updateOnlineStatus() {
+            if (navigator.onLine) {
+                window.location.reload();
+            }
+        }
+        
+        window.addEventListener('online', updateOnlineStatus);
+        
+        // Auto-retry every 30 seconds
+        setInterval(() => {
+            if (navigator.onLine) {
+                window.location.reload();
+            }
+        }, 30000);
+        
+        // Show connection status
+        const indicator = document.querySelector('.offline-indicator');
+        if (navigator.onLine) {
+            indicator.style.background = 'rgba(34, 197, 94, 0.9)';
+            indicator.innerHTML = '🟢 Online';
+        }
+    </script>
+</body>
+</html>
